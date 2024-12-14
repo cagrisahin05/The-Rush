@@ -7,44 +7,53 @@ namespace UdemyProject3D.Fuel
 {
 public class RocketFuel : MonoBehaviour
 {
-    [SerializeField] float _maxfuel = 100f; 
-    [SerializeField] float _currentfuel; 
-    [SerializeField] ParticleSystem _particle; 
+    [SerializeField] float _maxFuel = 100f;
+    [SerializeField] float _currentFuel;
+    [SerializeField] ParticleSystem _particle;
 
-    private void Awake() 
+    private void Awake()
     {
-        _currentfuel = _maxfuel;    
+        _currentFuel = _maxFuel;
+        // Partikül sistemini başlangıçta durduruyoruz
+        _particle.Stop();
     }
 
-    // Yakıtı arttıran fonksiyon
-    public void FuelIncrease(float increase)
+    void Update()
     {
-        _currentfuel += increase;
-        _currentfuel = Mathf.Min(_currentfuel, _maxfuel);  // Yakıtı maksimum seviyeye sınırlamak
-
-        if (_particle.isPlaying)
+        // Space tuşuna basıldığında partikül sistemini başlat
+        if (Input.GetKey(KeyCode.Space) && _currentFuel > 0f)
         {
-            _particle.Stop();  // Partikül sistemi durduruluyor
+            if (!_particle.isPlaying)  // Partikül sistemi zaten oynuyorsa tekrar başlatma
+            {
+                _particle.Play();
+            }
+        }
+        else
+        {
+            // Space tuşu bırakıldığında partikül sistemi durdur
+            if (_particle.isPlaying)
+            {
+                _particle.Stop();
+            }
         }
     }
 
     // Yakıtı azaltan fonksiyon
     public void FuelDecrease(float decrease)
     {
-        _currentfuel -= decrease;
-        _currentfuel = Mathf.Max(_currentfuel, 0f);  // Yakıtı sıfırın altına düşürmemek için
+        _currentFuel -= decrease;
+        _currentFuel = Mathf.Max(_currentFuel, 0f);
 
-        if (_particle.isStopped)
+        // Yakıt sıfıra düştüğünde partikül sistemini durdur
+        if (_currentFuel == 0f && _particle.isPlaying)
         {
-            _particle.Play();  // Yakıt azaldığında partikül sistemi başlatılıyor
+            _particle.Stop();
         }
     }
+            public float GetCurrentFuel()
+        {
+            return _currentFuel;
+        }
 
-    // Mevcut yakıt miktarını döndüren fonksiyon
-    public float GetCurrentFuel()
-    {
-        return _currentfuel;
-    }
-
-   }
+}
 }
