@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UdemyProject3D.Fuel;
+using UdemyProject3D.Managers;
 
 
 namespace   UdemyProject3D.Controllers
@@ -20,6 +21,7 @@ namespace   UdemyProject3D.Controllers
     Rigidbody rb;
     RocketFuel _fuel;
     
+    bool _canmove;
     //Yakıt Tüketimi
     [SerializeField] float thrustFuelConsumption = 1f;  // Her "thrust" için yakıt tüketimi
     [SerializeField] float rotationFuelConsumption = 0.1f; // Her "rotation" için yakıt tüketimi
@@ -28,19 +30,28 @@ namespace   UdemyProject3D.Controllers
     {
        rb = GetComponent<Rigidbody>();
        _fuel = GetComponent<RocketFuel>();
+       _canmove = true;
     }
 
     
     void Update()
     {
-      
+      if (!_canmove) return;
+
         if (_fuel !=null && _fuel.GetCurrentFuel() > 0)
         {
              ProcessThrust();
              ProcessRotation();
         }
     }
-
+        private void OnEnable()     
+        {
+            GameManager.Instance.OnGameOver += HandleOnEventTriggerer;
+        }
+        private void OnDisable()
+        {
+           GameManager.Instance.OnGameOver -= HandleOnEventTriggerer; 
+        }
     void ProcessThrust()
     {
            if(Input.GetKey(KeyCode.Space))
@@ -69,7 +80,13 @@ namespace   UdemyProject3D.Controllers
         transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);
     }
 
-
+    private void HandleOnEventTriggerer()
+    {
+        _canmove= false;
+        thrustSpeed = 0f;
+        rotateSpeed = 0f;
+        _fuel.FuelDecrease(100f);
+    }
 
 }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UdemyProject3D.Controllers;
+using UdemyProject3D.Managers;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -29,7 +30,7 @@ public class FinishFloorController : MonoBehaviour
        else
        {
         //Gitti
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GameManager.Instance.GameOver();
        }
     }
 }
