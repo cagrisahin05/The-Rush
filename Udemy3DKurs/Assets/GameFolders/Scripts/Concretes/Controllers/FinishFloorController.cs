@@ -26,6 +26,7 @@ public class FinishFloorController : MonoBehaviour
        {
             _firework.gameObject.SetActive(true);
             _finishlight.gameObject.SetActive(true);
+            GameManager.Instance.MissionSucced();
        }
        else
        {

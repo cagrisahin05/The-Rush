@@ -47,10 +47,13 @@ namespace   UdemyProject3D.Controllers
         private void OnEnable()     
         {
             GameManager.Instance.OnGameOver += HandleOnEventTriggerer;
+            GameManager.Instance.OnMissionSucced += HandleOnEventTriggerer;
         }
+
         private void OnDisable()
         {
            GameManager.Instance.OnGameOver -= HandleOnEventTriggerer; 
+           GameManager.Instance.OnGameOver -= HandleOnEventTriggerer;
         }
     void ProcessThrust()
     {
